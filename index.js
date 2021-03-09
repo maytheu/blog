@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const cloudinary = require("cloudinary").v2;
 const upload = require("express-fileupload");
 const path = require("path");
 
@@ -48,11 +47,6 @@ app.use((req, res, next) => {
   next();
 });
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_CLOUD_KEY,
-  api_secret: process.env.CLOUDINARY_CLOUD_SECRET,
-});
 
 require("./route/user.js")(app);
 require("./route/blog.js")(app);
