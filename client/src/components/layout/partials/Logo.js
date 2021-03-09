@@ -16,15 +16,17 @@ const Logo = ({
   return (
     <div
       {...props}
+      style={{margin:'0 auto'}}
       className={classes}
     >
       <h1 className="m-0">
         <Link to="/">
-          <Image
+          {/* <Image
             src={require('./../../../assets/images/logo.svg')}
             alt="Open"
             width={32}
-            height={32} />
+            height={32} /> */}
+            Welcome to my Blog
         </Link>
       </h1>
     </div>
