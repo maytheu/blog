@@ -21,7 +21,7 @@ const upload = multer({ storage: storage }).single("file");
 
 module.exports = (app) => {
   app.post("/api/user/upload", userAuth, (req, res) => {
-    let urlPath = path.join(__dirname, "../client/public")
+    let urlPath = path.join(__dirname, "../client/public");
     if (!req.files)
       return res.status(500).json({ success: false, err: "File not found" });
     const uploadFile = req.files.file;
@@ -32,7 +32,7 @@ module.exports = (app) => {
         .json({ success: true, url: `${urlPath}/${uploadFile.name}` });
     });
   });
-  
+
   app.post("/api/user/post", userAuth, (req, res) => {
     const post = new Blog({
       title: req.body.title,
@@ -51,19 +51,19 @@ module.exports = (app) => {
   app.get("/api/user/view", userAuth, (req, res) => {
     Blog.find({}, (err, post) => {
       if (err) return res.status(400).send(err);
-      res.status(200).send(post);
+      res.status(200).json({success: true, post});
     });
   });
 
-  //display only the published post
+  //display only all the published post
   app.get("/api/view", (req, res) => {
     Blog.find({ publish: true }, (err, post) => {
       if (err) return res.status(400).send(err);
-      res.status(200).send(post);
+      res.status(200).json({success: true, post});
     });
   });
 
-  //accept query params of title..3
+  //accept query params of id
   app.get("/api/post", (req, res) => {
     let id = req.query.id;
     const url = req.headers.referer;
@@ -85,17 +85,6 @@ module.exports = (app) => {
       }
     );
   });
-
-  // app.post("/api/user/upload", userAuth, (req, res) => {
-  //   upload(req, res, (err) => {
-  //     if (!req.file) return res.json({ success: false, err });
-  //     const dir = path.resolve(__dirname + "/../client/public/uploads/");
-  //     fs.readdir(dir, (err, items) => {
-  //       console.log(items);
-  //       return res.status(200).send(items);
-  //     });
-  //   });
-  // });
 
   app.get("/api/user/delete", userAuth, (req, res) => {
     let id = req.query.id;
@@ -145,10 +134,10 @@ module.exports = (app) => {
 
   app.get("/api/like", (req, res) => {
     let title = req.query.title;
-    Blog.findOneAndUpdate({ title }, { $inc: { like: 1 } }).exec(
-      (err, likes) => {
+    Blog.findOneAndUpdate({ title }, { $inc: { like: 1 } }, { new: true }).exec(
+      (err, post) => {
         if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true, likes });
+        res.status(200).json({ success: true,  post });
       }
     );
   });
@@ -156,9 +145,9 @@ module.exports = (app) => {
   app.get("/api/dislike", (req, res) => {
     let title = req.query.title;
     Blog.findOneAndUpdate({ title }, { $inc: { dislike: 1 } }).exec(
-      (err, dislikes) => {
+      (err, post) => {
         if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true, dislikes });
+        res.status(200).json({ success: true, post });
       }
     );
   });

@@ -74,7 +74,7 @@ const Input = ({
     <>
       {label && <FormLabel labelHidden={labelHidden} id={props.id}>{label}</FormLabel>}
       <div
-        className={wrapperClasses}
+        className={wrapperClasses} style={{marginBottom:"10px"}}
       >
         <Component
           {...props}

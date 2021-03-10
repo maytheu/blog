@@ -38,7 +38,7 @@ module.exports = (app) => {
     });
   });
 
-  app.get("/api/auth", userAuth, (req, res) => {
+  app.get("/api/user/auth", userAuth, (req, res) => {
     res.status(200).json({
       isUser: true,
       username: req.user.user,

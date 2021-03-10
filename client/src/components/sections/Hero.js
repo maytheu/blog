@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
-import classNames from 'classnames';
-import { SectionProps } from '../../utils/SectionProps';
-import ButtonGroup from '../elements/ButtonGroup';
-import Button from '../elements/Button';
-import Image from '../elements/Image';
-import Modal from '../elements/Modal';
+import React, { useState } from "react";
+import classNames from "classnames";
+import ThumbDownSharpIcon from "@material-ui/icons/ThumbDownSharp";
+import ThumbUpSharpIcon from "@material-ui/icons/ThumbUpSharp";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import EditIcon from "@material-ui/icons/Edit";
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
+import { SectionProps } from "../../utils/SectionProps";
+import ButtonGroup from "../elements/ButtonGroup";
+import Button from "../elements/Button";
+//redux
+import { useDispatch } from "react-redux";
+import { getDislike, getLike } from "../../store/blog";
 
 const propTypes = {
-  ...SectionProps.types
-}
+  ...SectionProps.types,
+};
 
 const defaultProps = {
-  ...SectionProps.defaults
-}
+  ...SectionProps.defaults,
+};
 
 const Hero = ({
   className,
@@ -22,89 +37,127 @@ const Hero = ({
   bottomDivider,
   hasBgColor,
   invertColor,
+  post,
+  title,
+  auth,
   ...props
 }) => {
-
-  const [videoModalActive, setVideomodalactive] = useState(false);
-
-  const openModal = (e) => {
-    e.preventDefault();
-    setVideomodalactive(true);
-  }
-
-  const closeModal = (e) => {
-    e.preventDefault();
-    setVideomodalactive(false);
-  }   
-
+  const dispatch = useDispatch();
+  const [blog, setBlog] = useState(post);
   const outerClasses = classNames(
-    'hero section center-content',
-    topOuterDivider && 'has-top-divider',
-    bottomOuterDivider && 'has-bottom-divider',
-    hasBgColor && 'has-bg-color',
-    invertColor && 'invert-color',
+    "hero section center-content",
+    topOuterDivider && "has-top-divider",
+    bottomOuterDivider && "has-bottom-divider",
+    hasBgColor && "has-bg-color",
+    invertColor && "invert-color",
     className
   );
 
   const innerClasses = classNames(
-    'hero-inner section-inner',
-    topDivider && 'has-top-divider',
-    bottomDivider && 'has-bottom-divider'
+    "hero-inner section-inner",
+    topDivider && "has-top-divider",
+    bottomDivider && "has-bottom-divider"
   );
 
+  const likeHandler = (event) => {
+    event.preventDefault();
+    dispatch(getLike(title)).then((res) => setBlog(res.payload));
+  };
+
+  const dislikeHandler = (event) => {
+    event.preventDefault();
+    event.preventDefault();
+    dispatch(getDislike(title)).then((res) => setBlog(res.payload));
+  };
+
+  const editHandler = (event) => {
+    event.preventDefault();
+    console.log("like");
+  };
+
+  const deleteHandler = (event) => {
+    event.preventDefault();
+    console.log("like");
+  };
+
+  const style = { padding: "3px 10px" };
+
   return (
-    <section
-      {...props}
-      className={outerClasses}
-    >
+    <section {...props} className={outerClasses}>
+      {console.log(blog.post)}
       <div className="container-sm">
         <div className={innerClasses}>
           <div className="hero-content">
-            <h1 className="mt-0 mb-16 reveal-from-bottom" data-reveal-delay="200">
-              Landing template for <span className="text-color-primary">startups</span>
-            </h1>
+            <h2 className="mt-0 mb-16" data-reveal-delay="200">
+              <span className="text-color-primary">{post.post.title}</span>
+            </h2>
             <div className="container-xs">
-              <p className="m-0 mb-32 reveal-from-bottom" data-reveal-delay="400">
-                Our landing page template works on all devices, so you only have to set it up once, and get beautiful results forever.
-                </p>
-              <div className="reveal-from-bottom" data-reveal-delay="600">
+              <p className="m-0 mb-32" data-reveal-delay="400">
+                {post.post.blog}
+              </p>
+              <div data-reveal-delay="2000">
                 <ButtonGroup>
-                  <Button tag="a" color="primary" wideMobile href="https://cruip.com/">
-                    Get started
-                    </Button>
-                  <Button tag="a" color="dark" wideMobile href="https://github.com/cruip/open-react-template/">
-                    View on Github
-                    </Button>
+                  {blog.post.like}
+                  <Button tag="a" style={style} onClick={likeHandler}>
+                    <ThumbUpSharpIcon />
+                  </Button>
+                  {blog.post.dislike}
+                  <Button tag="a" style={style} onClick={dislikeHandler}>
+                    <ThumbDownSharpIcon />
+                  </Button>
+                  <Button tag="a" style={style}>
+                    <FacebookShareButton url={post.url} quote={title}>
+                      <FacebookIcon size={35} round={true} />
+                    </FacebookShareButton>
+                  </Button>
+                  <Button tag="a" style={style}>
+                    <TwitterShareButton ur5l={post.url} title={title}>
+                      <TwitterIcon size={35} round={true} />
+                    </TwitterShareButton>
+                  </Button>
+                  <Button tag="a" style={style}>
+                    <LinkedinShareButton url={post.url} title={title}>
+                      <LinkedinIcon size={35} round={true} />
+                    </LinkedinShareButton>
+                  </Button>
+                  <Button tag="a" style={style}>
+                    <WhatsappShareButton url={post.url} title={title}>
+                      <WhatsappIcon round={true} size={35} />
+                    </WhatsappShareButton>
+                  </Button>
+                  {auth ? (
+                    <div>
+                      <Button tag="a" style={style} onClick={editHandler}>
+                        <EditIcon />
+                      </Button>
+                      .
+                      <Button tag="a" style={style} onClick={deleteHandler}>
+                        <DeleteForeverIcon />
+                      </Button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </ButtonGroup>
               </div>
+              {blog.post.comment.map((comment) => {
+                let date = new Date(comment.id);
+                return (
+                  <div data-reveal-delay="400" key={new Date(comment.id)}>
+                    {comment.comment} by{" "}
+                    <em>
+                      {comment.commentName} on {date.toDateString()}
+                    </em>
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className="hero-figure reveal-from-bottom illustration-element-01" data-reveal-value="20px" data-reveal-delay="800">
-            <a
-              data-video="https://player.vimeo.com/video/174002812"
-              href="#0"
-              aria-controls="video-modal"
-              onClick={openModal}
-            >
-              <Image
-                className="has-shadow"
-                src={require('./../../assets/images/video-placeholder.jpg')}
-                alt="Hero"
-                width={896}
-                height={504} />
-            </a>
-          </div>
-          <Modal
-            id="video-modal"
-            show={videoModalActive}
-            handleClose={closeModal}
-            video="https://player.vimeo.com/video/174002812"
-            videoTag="iframe" />
         </div>
       </div>
     </section>
   );
-}
+};
 
 Hero.propTypes = propTypes;
 Hero.defaultProps = defaultProps;
