@@ -111,9 +111,9 @@ module.exports = (app) => {
       { _id: id },
       { $push: { comment }, $inc: { commentCount: 1 } },
       { new: true },
-      (err, doc) => {
+      (err, post) => {
         if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true, doc });
+        res.status(200).json({ success: true, post });
       }
     );
   });

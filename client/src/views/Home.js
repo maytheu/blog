@@ -21,6 +21,7 @@ const Home = () => {
   }, []);
   return (
     <>
+    {console.log(auth)}
       {/* <Hero className="illustration-section-01" />
       <FeaturesTiles />
       <FeaturesSplit invertMobile topDivider imageFill className="illustration-section-02" /> */}

@@ -53,8 +53,8 @@ export const getDislike = (title) => (dispatch) => {
     .then((res) => dispatch(dislike(res.data)));
 };
 
-export const getComment = (id) => (dispatch) => {
+export const getComment = (id, data) => (dispatch) => {
   return axios
-    .post(`${SERVER}post_comment?id=${id}`)
+    .post(`${SERVER}post_comment?id=${id}`, data)
     .then((res) => dispatch(comment(res.data)));
 };

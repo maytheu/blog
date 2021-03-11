@@ -13,7 +13,6 @@ import formValidation from "../../formControls/formValidation";
 
 //redux
 import { useDispatch } from "react-redux";
-import { getComment } from "../../store/blog";
 
 const propTypes = {
   ...SectionProps.types,
@@ -25,7 +24,7 @@ const defaultProps = {
   split: false,
 };
 
-const Comment = ({
+const Login = ({
   className,
   topOuterDivider,
   bottomOuterDivider,
@@ -67,9 +66,9 @@ const Comment = ({
       commentName: values.commentName,
       commentDate: d.getTime(),
     };
-    dispatch(getComment(id, data)).then((res) => {
-      if (res.payload.success) return alert("Your view has been aired");
-    });
+    // dispatch(getComment(id, data)).then((res) => {
+    //   if (res.payload.success) return alert("Your view has been aired");
+    // });
   }
 
   const style = { padding: "3px 10px" };
@@ -81,16 +80,16 @@ const Comment = ({
           <div className="cta-action">
             <form onSubmit={handleSubmit}>
               <Input
-                id="commentName"
-                type="text"
+                id="email"
+                type="email"
                 change={handleChange}
-                placeholder="Your name"
+                placeholder="Email"
               />
               <Input
-                id="comment"
-                type="textarea"
+                id="password"
+                type="password"
                 change={handleChange}
-                placeholder="Your thought here"
+                placeholder="Password"
               />
               <Button tag="a" style={style} onClick={handleSubmit}>
                 <SendIcon />
@@ -103,7 +102,7 @@ const Comment = ({
   );
 };
 
-Comment.propTypes = propTypes;
-Comment.defaultProps = defaultProps;
+Login.propTypes = propTypes;
+Login.defaultProps = defaultProps;
 
-export default Comment;
+export default Login;

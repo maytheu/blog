@@ -54,6 +54,7 @@ const Input = ({
   placeholder,
   rows,
   hint,
+  change,
   ...props
 }) => {
 
@@ -83,6 +84,7 @@ const Input = ({
           name={name}
           disabled={disabled}
           value={value}
+          onChange={change}
           placeholder={placeholder}
           rows={type === 'textarea' ? rows : null}
         />

@@ -10,7 +10,7 @@ import LayoutDefault from "./layouts/LayoutDefault";
 // Views
 import Home from "./views/Home";
 import Details from "./views/Details";
-
+import Auth from "./views/admin/Auth";
 
 // Initialize Google Analytics
 ReactGA.initialize(process.env.REACT_APP_GA_CODE);
@@ -33,20 +33,26 @@ const App = () => {
   }, [location]);
 
   return (
-      <ScrollReveal
-        ref={childRef}
-        children={() => (
-          <Switch>
-            <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
-            <AppRoute
-              exact
-              path="/post/:post"
-              component={Details}
-              layout={LayoutDefault}
-            />
-          </Switch>
-        )}
-      />
+    <ScrollReveal
+      ref={childRef}
+      children={() => (
+        <Switch>
+          <AppRoute exact path="/" component={Home} layout={LayoutDefault} />
+          <AppRoute
+            exact
+            path="/post/:post"
+            component={Details}
+            layout={LayoutDefault}
+          />
+          <AppRoute
+            exact
+            path="/admin/login"
+            component={Auth}
+            layout={LayoutDefault}
+          />
+        </Switch>
+      )}
+    />
   );
 };
 

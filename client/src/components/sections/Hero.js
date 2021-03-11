@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 import ThumbDownSharpIcon from "@material-ui/icons/ThumbDownSharp";
 import ThumbUpSharpIcon from "@material-ui/icons/ThumbUpSharp";
@@ -43,7 +43,6 @@ const Hero = ({
   ...props
 }) => {
   const dispatch = useDispatch();
-  const [blog, setBlog] = useState(post);
   const outerClasses = classNames(
     "hero section center-content",
     topOuterDivider && "has-top-divider",
@@ -61,13 +60,12 @@ const Hero = ({
 
   const likeHandler = (event) => {
     event.preventDefault();
-    dispatch(getLike(title)).then((res) => setBlog(res.payload));
+    dispatch(getLike(title));
   };
 
   const dislikeHandler = (event) => {
     event.preventDefault();
-    event.preventDefault();
-    dispatch(getDislike(title)).then((res) => setBlog(res.payload));
+    dispatch(getDislike(title));
   };
 
   const editHandler = (event) => {
@@ -84,7 +82,6 @@ const Hero = ({
 
   return (
     <section {...props} className={outerClasses}>
-      {console.log(blog.post)}
       <div className="container-sm">
         <div className={innerClasses}>
           <div className="hero-content">
@@ -97,11 +94,11 @@ const Hero = ({
               </p>
               <div data-reveal-delay="2000">
                 <ButtonGroup>
-                  {blog.post.like}
+                  {post.post.like}
                   <Button tag="a" style={style} onClick={likeHandler}>
                     <ThumbUpSharpIcon />
                   </Button>
-                  {blog.post.dislike}
+                  {post.post.dislike}
                   <Button tag="a" style={style} onClick={dislikeHandler}>
                     <ThumbDownSharpIcon />
                   </Button>
@@ -140,13 +137,23 @@ const Hero = ({
                   )}
                 </ButtonGroup>
               </div>
-              {blog.post.comment.map((comment) => {
-                let date = new Date(comment.id);
+              {post.post.comment.map((comment) => {
+                let date = new Date(comment.commentDate);
                 return (
-                  <div data-reveal-delay="400" key={new Date(comment.id)}>
+                  <div
+                    data-reveal-delay="400"
+                    key={new Date(comment.commentId)}
+                  >
                     {comment.comment} by{" "}
                     <em>
-                      {comment.commentName} on {date.toDateString()}
+                      {comment.commentName} on {date.toDateString()}{" "}
+                      {auth ? (
+                        <Button style={style}>
+                          <DeleteForeverIcon />
+                        </Button>
+                      ) : (
+                        ""
+                      )}
                     </em>
                   </div>
                 );

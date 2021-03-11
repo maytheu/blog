@@ -9,27 +9,26 @@ import { getPost } from "../store/blog";
 
 const Details = (props) => {
   const [loading, setLoading] = useState(true);
-  const [post, setPost] = useState({});
   const auth = useSelector((state) => state.auth);
+  const post = useSelector((state) => state.blog);
   const dispatch = useDispatch();
 
   useEffect(() => {
     document.title = props.location.state.title;
     dispatch(getPost(props.location.state.id)).then((res) => {
-      setPost(res.payload);
       setLoading(false);
     });
   }, []);
 
   return (
-    <>
+    <>{console.log(auth)}
       {!loading ? (
         <>
           <Hero
             className="illustration-section-01"
-            post={post}
+            post={post.blog}
             title={props.location.state.title}
-            auth={true}
+            auth={false}
           />
           <Comment split id={props.location.state.id} />
         </>
