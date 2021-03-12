@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const SERVER = "/api/";
+const ADMIN_SERVER = "/api/user/";
 
 const slice = createSlice({
   name: "blog",
@@ -22,12 +23,15 @@ const slice = createSlice({
     comment: (state, action) => {
       state.blog = action.payload;
     },
+    allPost: (state, action) => {
+      state.blog = action.payload;
+    },
   },
 });
 
 export default slice.reducer;
 
-const { viewPosts, post, like, dislike, comment } = slice.actions;
+const { viewPosts, post, like, dislike, comment, allPost } = slice.actions;
 
 export const getViewPost = () => (dispatch) => {
   return axios
@@ -57,4 +61,10 @@ export const getComment = (id, data) => (dispatch) => {
   return axios
     .post(`${SERVER}post_comment?id=${id}`, data)
     .then((res) => dispatch(comment(res.data)));
+};
+
+export const getAllPost = () => (dispatch) => {
+  return axios
+    .get(`${ADMIN_SERVER}view`)
+    .then((res) => dispatch(allPost(res.data)));
 };

@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import SendIcon from "@material-ui/icons/Send";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { withRouter } from "react-router-dom";
 
 import { SectionProps } from "../../utils/SectionProps";
 import Input from "../elements/Input";
@@ -13,6 +14,7 @@ import formValidation from "../../formControls/formValidation";
 
 //redux
 import { useDispatch } from "react-redux";
+import { getLogin } from "../../store/auth";
 
 const propTypes = {
   ...SectionProps.types,
@@ -46,7 +48,7 @@ const Login = ({
   );
 
   const { values, handleChange, handleSubmit, errors } = useForm(
-    postComment,
+    login,
     formValidation
   );
 
@@ -59,31 +61,32 @@ const Login = ({
     split && "cta-split"
   );
 
-  function postComment() {
-    const d = new Date();
-    const data = {
-      comment: values.comment,
-      commentName: values.commentName,
-      commentDate: d.getTime(),
-    };
-    // dispatch(getComment(id, data)).then((res) => {
-    //   if (res.payload.success) return alert("Your view has been aired");
-    // });
+  function login() {
+    if (!errors) return alert("Check your Values");
+    const data = { user: values.user, password: values.password };
+    dispatch(getLogin(data)).then((res) => {
+      if (res.payload.loginSuccess) {
+        props.history.push("/");
+      } else {
+        alert("Invalid User or Password");
+      }
+    });
   }
 
   const style = { padding: "3px 10px" };
 
   return (
     <section {...props} className={outerClasses}>
-      <div className="container" style={{ width: "50%" }}>
+      <div className="container" style={{ width: "50%", marginTop: "40px" }}>
+        <h3 className="mt-0 mb-16">Login to post Article</h3>
         <div className="cta-slogan">
           <div className="cta-action">
             <form onSubmit={handleSubmit}>
               <Input
-                id="email"
-                type="email"
+                id="user"
+                type="text"
                 change={handleChange}
-                placeholder="Email"
+                placeholder="Username oe Email"
               />
               <Input
                 id="password"
@@ -92,7 +95,7 @@ const Login = ({
                 placeholder="Password"
               />
               <Button tag="a" style={style} onClick={handleSubmit}>
-                <SendIcon />
+                <ExitToAppIcon />
               </Button>
             </form>
           </div>
@@ -105,4 +108,4 @@ const Login = ({
 Login.propTypes = propTypes;
 Login.defaultProps = defaultProps;
 
-export default Login;
+export default withRouter(Login);

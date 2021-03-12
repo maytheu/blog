@@ -1,7 +1,7 @@
 export default function formValidation(values) {
     let isValid = true;
-    if (values.pass) {
-      isValid = values.pass.length >= 8 && isValid;
+    if (values.password) {
+      isValid = values.password.length >= 8 && isValid;
     }
     if (values.amount) {
       isValid = !isNaN(values.amount) && isValid;

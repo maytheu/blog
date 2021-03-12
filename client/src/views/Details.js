@@ -21,14 +21,14 @@ const Details = (props) => {
   }, []);
 
   return (
-    <>{console.log(auth)}
+    <>
       {!loading ? (
         <>
           <Hero
             className="illustration-section-01"
             post={post.blog}
             title={props.location.state.title}
-            auth={false}
+            auth={auth.auth.loginSuccess}
           />
           <Comment split id={props.location.state.id} />
         </>

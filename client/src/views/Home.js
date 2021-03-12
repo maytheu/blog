@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import sections
-// import Hero from "../components/sections/Hero";
-// import FeaturesTiles from "../components/sections/FeaturesTiles";
-// import FeaturesSplit from "../components/sections/FeaturesSplit";
 import Testimonial from "../components/sections/Testimonial";
-import Cta from "../components/sections/Cta";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import { getViewPost } from "../store/blog";
+import { getAllPost, getViewPost } from "../store/blog";
 
 const Home = () => {
   const blog = useSelector((state) => state.blog);
@@ -17,18 +13,15 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getViewPost()).then(() => setLoading(false));
+    document.title = "Welcome to my Blog";
+    if (auth.auth.loginSuccess) {
+      dispatch(getAllPost()).then(() => setLoading(false));
+    } else {
+      dispatch(getViewPost()).then(() => setLoading(false));
+    }
   }, []);
-  return (
-    <>
-    {console.log(auth)}
-      {/* <Hero className="illustration-section-01" />
-      <FeaturesTiles />
-      <FeaturesSplit invertMobile topDivider imageFill className="illustration-section-02" /> */}
-      {loading ? "" : <Testimonial topDivider post={blog.blog.post} />}
-      {/* <Cta split /> */}
-    </>
-  );
+  
+  return <>{loading ? "" : <Testimonial topDivider post={blog.blog.post} />}</>;
 };
 
 export default Home;
