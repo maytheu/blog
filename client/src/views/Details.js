@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 // import sections
 import Hero from "../components/sections/Hero";
 import Comment from "../components/sections/Coment";
+import Loader from "../components/layout/Loader";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -33,7 +34,7 @@ const Details = (props) => {
           <Comment split id={props.location.state.id} />
         </>
       ) : (
-        ""
+        <Loader/>
       )}
     </>
   );

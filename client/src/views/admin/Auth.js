@@ -3,14 +3,13 @@ import React, { useEffect } from "react";
 import Login from "../../components/sections/Login";
 
 const Auth = () => {
-
-  useEffect(()=>{
-    document.title='Admin Login'
-  })
+  useEffect(() => {
+    document.title = "Admin Login";
+  });
 
   return (
     <>
-  <Login split  />
+      <Login split />
     </>
   );
 };

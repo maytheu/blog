@@ -11,7 +11,7 @@ const slice = createSlice({
     login: (state, action) => {
       state.auth = action.payload;
     },
-    auth: (state, action) => {
+    logout: (state, action) => {
       state.auth = action.payload;
     },
   },
@@ -19,7 +19,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-const { login, auth } = slice.actions;
+const { login, logout } = slice.actions;
 
 export const getLogin = (data) => (dispatch) => {
   return axios
@@ -27,8 +27,8 @@ export const getLogin = (data) => (dispatch) => {
     .then((res) => dispatch(login(res.data)));
 };
 
-export const getAuth = () => (dispatch) => {
+export const getLogout = () => (dispatch) => {
   return axios
-    .get(`${ADMIN_SERVER}auth`)
-    .then((res) => dispatch(auth(res.data)));
+    .get(`${ADMIN_SERVER}sign_out`)
+    .then((res) => dispatch(logout(res.data)));
 };

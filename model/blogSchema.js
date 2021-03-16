@@ -17,6 +17,7 @@ const blogSchema = mongoose.Schema({
     required: true,
   },
   publishedDate: Date,
+  updateDate: Date,
   like: {
     type: Number,
     default: 0,

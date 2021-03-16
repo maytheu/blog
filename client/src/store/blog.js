@@ -26,12 +26,35 @@ const slice = createSlice({
     allPost: (state, action) => {
       state.blog = action.payload;
     },
+    postBlog: (state, action) => {
+      state.blog = action.payload;
+    },
+    editBlog: (state, action) => {
+      state.blog = action.payload;
+    },
+    deleteBlog: (state, action) => {
+      state.blog = action.payload;
+    },
+  },
+  deleteComment: (state, action) => {
+    state.blog = action.payload;
   },
 });
 
 export default slice.reducer;
 
-const { viewPosts, post, like, dislike, comment, allPost } = slice.actions;
+const {
+  viewPosts,
+  post,
+  like,
+  dislike,
+  comment,
+  allPost,
+  postBlog,
+  editBlog,
+  deleteBlog,
+  deleteComment,
+} = slice.actions;
 
 export const getViewPost = () => (dispatch) => {
   return axios
@@ -67,4 +90,28 @@ export const getAllPost = () => (dispatch) => {
   return axios
     .get(`${ADMIN_SERVER}view`)
     .then((res) => dispatch(allPost(res.data)));
+};
+
+export const getPostBlog = (data) => (dispatch) => {
+  return axios
+    .post(`${ADMIN_SERVER}post`, data)
+    .then((res) => dispatch(postBlog(res.data)));
+};
+
+export const getEditBlog = (data, id) => (dispatch) => {
+  return axios
+    .post(`${ADMIN_SERVER}edit?id=${id}`, data)
+    .then((res) => dispatch(editBlog(res.data)));
+};
+
+export const getDeleteBlog = (id) => (dispatch) => {
+  return axios
+    .get(`${ADMIN_SERVER}delete?id=${id}`)
+    .then((res) => dispatch(deleteBlog(res.data)));
+};
+
+export const getDeleteComment = (id) => (dispatch) => {
+  return axios
+    .get(`${ADMIN_SERVER}comment_delete?id=${id}`)
+    .then((res) => dispatch(deleteComment(res.data)));
 };

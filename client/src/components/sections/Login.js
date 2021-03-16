@@ -54,13 +54,6 @@ const Login = ({
 
   const dispatch = useDispatch();
 
-  const innerClasses = classNames(
-    "cta-inner section-inner",
-    topDivider && "has-top-divider",
-    bottomDivider && "has-bottom-divider",
-    split && "cta-split"
-  );
-
   function login() {
     if (!errors) return alert("Check your Values");
     const data = { user: values.user, password: values.password };
@@ -73,10 +66,12 @@ const Login = ({
     });
   }
 
-  const style = { padding: "3px 10px" };
-
   return (
-    <section {...props} className={outerClasses}>
+    <section
+      {...props}
+      className={outerClasses}
+      style={{ paddingBottom: "0px" }}
+    >
       <div className="container" style={{ width: "50%", marginTop: "40px" }}>
         <h3 className="mt-0 mb-16">Login to post Article</h3>
         <div className="cta-slogan">
@@ -94,7 +89,7 @@ const Login = ({
                 change={handleChange}
                 placeholder="Password"
               />
-              <Button tag="a" style={style} onClick={handleSubmit}>
+              <Button tag="a" style={{ width: "100%" }} onClick={handleSubmit}>
                 <ExitToAppIcon />
               </Button>
             </form>

@@ -10,7 +10,7 @@ const Blog = mongoose.model("blogs");
 // STORAGE MULTER CONFIG
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, path.join(__dirname, "../upload/"));
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`);
@@ -21,16 +21,17 @@ const upload = multer({ storage: storage }).single("file");
 
 module.exports = (app) => {
   app.post("/api/user/upload", userAuth, (req, res) => {
-    let urlPath = path.join(__dirname, "../client/public");
-    if (!req.files)
-      return res.status(500).json({ success: false, err: "File not found" });
-    const uploadFile = req.files.file;
-    uploadFile.mv(`${urlPath}/${uploadFile.name}`, (err) => {
-      if (err) return res.status(500).json({ success: false, err });
+    upload(req, res, (err) => {
+      if (err) return res.status(500).send("Please upload a file");
       return res
         .status(200)
-        .json({ success: true, url: `${urlPath}/${uploadFile.name}` });
+        .json({ success: true, url: `/api/upload/${req.file.filename}` });
     });
+  });
+
+  app.get("/api/upload/:img", (req, res) => {
+    const img = req.params.img;
+    res.sendFile(path.join(__dirname, `../upload/${img}`));
   });
 
   app.post("/api/user/post", userAuth, (req, res) => {
@@ -51,7 +52,7 @@ module.exports = (app) => {
   app.get("/api/user/view", userAuth, (req, res) => {
     Blog.find({}, (err, post) => {
       if (err) return res.status(400).send(err);
-      res.status(200).json({success: true, post});
+      res.status(200).json({ success: true, post });
     });
   });
 
@@ -59,7 +60,7 @@ module.exports = (app) => {
   app.get("/api/view", (req, res) => {
     Blog.find({ publish: true }, (err, post) => {
       if (err) return res.status(400).send(err);
-      res.status(200).json({success: true, post});
+      res.status(200).json({ success: true, post });
     });
   });
 
@@ -118,9 +119,8 @@ module.exports = (app) => {
     );
   });
 
-  //the admin will delete post with /api/user/comment_delete/id/?commentDate
+  //the admin will delete post with /api/user/comment_delete?id=commentDate
   app.get("/api/user/comment_delete", userAuth, (req, res) => {
-    let _id = req.query.id;
     let id = req.query.id;
     Blog.update(
       {},
@@ -128,7 +128,7 @@ module.exports = (app) => {
       { multi: true }
     ).exec((err, doc) => {
       if (err) return res.json({ success: false, err });
-      res.status(200).json({ success: true, doc });
+      res.status(200).json({ success: true });
     });
   });
 
@@ -137,7 +137,7 @@ module.exports = (app) => {
     Blog.findOneAndUpdate({ title }, { $inc: { like: 1 } }, { new: true }).exec(
       (err, post) => {
         if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true,  post });
+        res.status(200).json({ success: true, post });
       }
     );
   });

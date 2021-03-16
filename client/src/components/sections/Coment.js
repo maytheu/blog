@@ -53,13 +53,6 @@ const Comment = ({
 
   const dispatch = useDispatch();
 
-  const innerClasses = classNames(
-    "cta-inner section-inner",
-    topDivider && "has-top-divider",
-    bottomDivider && "has-bottom-divider",
-    split && "cta-split"
-  );
-
   function postComment() {
     const d = new Date();
     const data = {
@@ -72,10 +65,12 @@ const Comment = ({
     });
   }
 
-  const style = { padding: "3px 10px" };
-
   return (
-    <section {...props} className={outerClasses}>
+    <section
+      {...props}
+      className={outerClasses}
+      style={{ paddingBottom: "0px" }}
+    >
       <div className="container" style={{ width: "50%" }}>
         <div className="cta-slogan">
           <div className="cta-action">
@@ -92,7 +87,7 @@ const Comment = ({
                 change={handleChange}
                 placeholder="Your thought here"
               />
-              <Button tag="a" style={style} onClick={handleSubmit}>
+              <Button tag="a" style={{ width: "100%" }} onClick={handleSubmit}>
                 <SendIcon />
               </Button>
             </form>

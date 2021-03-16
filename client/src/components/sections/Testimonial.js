@@ -38,8 +38,6 @@ const Testimonial = ({
     bottomDivider && "has-bottom-divider"
   );
 
-  const tilesClasses = classNames("tiles-wrap", pushLeft && "push-left");
-
   const sectionHeader = post.map((blog, i) => ({
     _id: blog._id,
     title: blog.title,
@@ -49,7 +47,7 @@ const Testimonial = ({
   return (
     <section {...props} className={outerClasses}>
       <div className="container">
-        <div className={innerClasses}>
+        <div className={innerClasses} style={{ paddingBottom: "0px" }}>
           <SectionHeader data={sectionHeader} className="center-content" />
         </div>
       </div>

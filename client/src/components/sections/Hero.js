@@ -14,12 +14,20 @@ import {
   WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
+import { Link, withRouter } from "react-router-dom";
+import DOMPurify from "dompurify";
+
 import { SectionProps } from "../../utils/SectionProps";
 import ButtonGroup from "../elements/ButtonGroup";
 import Button from "../elements/Button";
 //redux
 import { useDispatch } from "react-redux";
-import { getDislike, getLike } from "../../store/blog";
+import {
+  getDeleteBlog,
+  getDeleteComment,
+  getDislike,
+  getLike,
+} from "../../store/blog";
 
 const propTypes = {
   ...SectionProps.types,
@@ -58,6 +66,12 @@ const Hero = ({
     bottomDivider && "has-bottom-divider"
   );
 
+  const createMarkup = (html) => {
+    return {
+      __html: DOMPurify.sanitize(html),
+    };
+  };
+
   const likeHandler = (event) => {
     event.preventDefault();
     dispatch(getLike(title));
@@ -70,28 +84,57 @@ const Hero = ({
 
   const editHandler = (event) => {
     event.preventDefault();
-    console.log("like");
+    props.history.push(`/admin/${title.replace(/\s+/g, "-").toLowerCase()}`);
   };
 
   const deleteHandler = (event) => {
     event.preventDefault();
-    console.log("like");
+    dispatch(getDeleteBlog(post.post._id));
+    props.history.push("/");
+  };
+
+  const deleteComment = (id) => {
+    dispatch(getDeleteComment(id));
+    props.history.push(`/`);
   };
 
   const style = { padding: "3px 10px" };
 
   return (
-    <section {...props} className={outerClasses}>
+    <section
+      {...props}
+      className={outerClasses}
+      style={{ paddingBottom: "0px" }}
+    >
       <div className="container-sm">
         <div className={innerClasses}>
           <div className="hero-content">
             <h2 className="mt-0 mb-16" data-reveal-delay="200">
-              <span className="text-color-primary">{post.post.title}</span>
+              <span className="text-color-primary">
+                {auth ? (
+                  <Link
+                    to={`/admin/${title.replace(/\s+/g, "-").toLowerCase()}`}
+                  >
+                    {post.post.title}
+                  </Link>
+                ) : (
+                  post.post.title
+                )}
+              </span>
             </h2>
             <div className="container-xs">
-              <p className="m-0 mb-32" data-reveal-delay="400">
-                {post.post.blog}
-              </p>
+              <div className="m-0 mb-32" data-reveal-delay="400">
+                <div
+                  dangerouslySetInnerHTML={createMarkup(post.post.blog)}
+                ></div>{" "}
+                {post.post.updateDate
+                  ? `Updated on ${new Date(
+                      post.post.updateDate
+                    ).toDateString()}`
+                  : `Posted on ${new Date(
+                      post.post.publishedDate
+                    ).toDateString()}`}
+              </div>
               <div data-reveal-delay="2000">
                 <ButtonGroup>
                   {post.post.like}
@@ -137,28 +180,31 @@ const Hero = ({
                   )}
                 </ButtonGroup>
               </div>
-              {post.post.comment.map((comment) => {
-                let date = new Date(comment.commentDate);
-                return (
-                  <div
-                    data-reveal-delay="400"
-                    key={new Date(comment.commentId)}
-                  >
-                    {comment.comment} by{" "}
-                    <em>
-                      {comment.commentName} on {date.toDateString()}{" "}
-                      {auth ? (
-                        <Button style={style}>
-                          <DeleteForeverIcon />
-                        </Button>
-                      ) : (
-                        ""
-                      )}
-                    </em>
-                  </div>
-                );
-              })}
+              {post.post.comment
+                ? post.post.comment.map((comment) => {
+                    let date = new Date(comment.commentDate);
+                    return (
+                      <div data-reveal-delay="400" key={comment.commentId}>
+                        {comment.comment} by{" "}
+                        <em>
+                          {comment.commentName} on {date.toDateString()}{" "}
+                          {auth ? (
+                            <Button
+                              style={style}
+                              onClick={() => deleteComment(comment.commentId)}
+                            >
+                              <DeleteForeverIcon />
+                            </Button>
+                          ) : (
+                            ""
+                          )}
+                        </em>
+                      </div>
+                    );
+                  })
+                : ""}
             </div>
+            {post.post.commentCount} comment
           </div>
         </div>
       </div>
@@ -169,4 +215,4 @@ const Hero = ({
 Hero.propTypes = propTypes;
 Hero.defaultProps = defaultProps;
 
-export default Hero;
+export default withRouter(Hero);

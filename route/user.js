@@ -45,7 +45,7 @@ module.exports = (app) => {
     });
   });
 
-  app.get("/api/sign_out", userAuth, (req, res) => {
+  app.get("/api/user/sign_out", userAuth, (req, res) => {
     Author.findOneAndUpdate(
       { _id: req.user._id },
       { token: "" },

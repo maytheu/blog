@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import sections
 import Testimonial from "../components/sections/Testimonial";
+import Loader from "../components/layout/Loader";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
@@ -19,9 +20,13 @@ const Home = () => {
     } else {
       dispatch(getViewPost()).then(() => setLoading(false));
     }
-  }, []);
-  
-  return <>{loading ? "" : <Testimonial topDivider post={blog.blog.post} />}</>;
+  }, [blog]);
+
+  return (
+    <>
+      {loading ? <Loader /> : <Testimonial topDivider post={blog.blog.post} />}
+    </>
+  );
 };
 
 export default Home;
