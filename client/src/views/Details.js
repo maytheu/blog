@@ -14,8 +14,11 @@ const Details = (props) => {
   const post = useSelector((state) => state.blog);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    document.title = props.location.state.title;
+  useEffect(() => { 
+    console.log(window.location.pathname)
+    let param = window.location.pathname.split('/')
+    console.log(param[2])
+    document.title = props.location.state.title || param[2]
     dispatch(getPost(props.location.state.id)).then((res) => {
       setLoading(false);
     });

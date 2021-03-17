@@ -7,8 +7,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import {
   FacebookIcon,
   FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
   TwitterIcon,
   TwitterShareButton,
   WhatsappIcon,
@@ -135,6 +133,7 @@ const Hero = ({
                       post.post.publishedDate
                     ).toDateString()}`}
               </div>
+              {console.log(post.url)}
               <div data-reveal-delay="2000">
                 <ButtonGroup>
                   {post.post.like}
@@ -154,11 +153,6 @@ const Hero = ({
                     <TwitterShareButton ur5l={post.url} title={title}>
                       <TwitterIcon size={35} round={true} />
                     </TwitterShareButton>
-                  </Button>
-                  <Button tag="a" style={style}>
-                    <LinkedinShareButton url={post.url} title={title}>
-                      <LinkedinIcon size={35} round={true} />
-                    </LinkedinShareButton>
                   </Button>
                   <Button tag="a" style={style}>
                     <WhatsappShareButton url={post.url} title={title}>
@@ -204,7 +198,9 @@ const Hero = ({
                   })
                 : ""}
             </div>
-            {post.post.commentCount} comment
+            {post.post.commentCount === 0
+              ? ""
+              : post.post.commentCount + " comments"}
           </div>
         </div>
       </div>

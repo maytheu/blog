@@ -40,8 +40,12 @@ const Footer = ({ className, topOuterDivider, topDivider, ...props }) => {
             "site-footer-inner",
             topDivider && "has-top-divider"
           )}
+          style={{ padding: "0px", paddingBottom: "10px" }}
         >
-          <div className="footer-top space-between text-xxs">
+          <div
+            className="footer-top space-between text-xxs"
+            style={{ paddingBottom: "0px" }}
+          >
             <FooterSocial />
             <FooterNav />
           </div>

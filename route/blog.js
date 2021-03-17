@@ -50,18 +50,22 @@ module.exports = (app) => {
 
   //display all post for admin
   app.get("/api/user/view", userAuth, (req, res) => {
-    Blog.find({}, (err, post) => {
-      if (err) return res.status(400).send(err);
-      res.status(200).json({ success: true, post });
-    });
+    Blog.find({})
+      .sort({ _id: -1 })
+      .exec((err, post) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, post });
+      });
   });
 
   //display only all the published post
   app.get("/api/view", (req, res) => {
-    Blog.find({ publish: true }, (err, post) => {
-      if (err) return res.status(400).send(err);
-      res.status(200).json({ success: true, post });
-    });
+    Blog.find({ publish: true })
+      .sort({ _id: -1 })
+      .exec((err, post) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, post });
+      });
   });
 
   //accept query params of id
@@ -144,11 +148,13 @@ module.exports = (app) => {
 
   app.get("/api/dislike", (req, res) => {
     let title = req.query.title;
-    Blog.findOneAndUpdate({ title }, { $inc: { dislike: 1 } }).exec(
-      (err, post) => {
-        if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true, post });
-      }
-    );
+    Blog.findOneAndUpdate(
+      { title },
+      { $inc: { dislike: 1 } },
+      { new: true }
+    ).exec((err, post) => {
+      if (err) return res.json({ success: false, err });
+      res.status(200).json({ success: true, post });
+    });
   });
 };
