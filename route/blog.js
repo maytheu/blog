@@ -71,7 +71,7 @@ module.exports = (app) => {
   //accept query params of id
   app.get("/api/post", (req, res) => {
     let id = req.query.id;
-    const url = req.headers.referer;
+    const url = `${req.headers.referer}/${id}`;
     Blog.findOne({ _id: id }, (err, post) => {
       if (err) return res.json({ success: false, err });
       res.status(200).json({ success: true, post, url });
@@ -148,6 +148,7 @@ module.exports = (app) => {
 
   app.get("/api/dislike", (req, res) => {
     let title = req.query.title;
+
     Blog.findOneAndUpdate(
       { title },
       { $inc: { dislike: 1 } },

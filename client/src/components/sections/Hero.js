@@ -133,7 +133,6 @@ const Hero = ({
                       post.post.publishedDate
                     ).toDateString()}`}
               </div>
-              {console.log(post.url)}
               <div data-reveal-delay="2000">
                 <ButtonGroup>
                   {post.post.like}

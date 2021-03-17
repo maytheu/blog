@@ -3,7 +3,7 @@ import { useLocation, Switch } from "react-router-dom";
 import AppRoute from "./utils/AppRoute";
 import ScrollReveal from "./utils/ScrollReveal";
 import ReactGA from "react-ga";
-import './App.css'
+import "./App.css";
 
 // Layouts
 import LayoutDefault from "./layouts/LayoutDefault";
@@ -44,6 +44,12 @@ const App = () => {
           <AppRoute
             exact
             path="/post/:post"
+            component={Details}
+            layout={LayoutDefault}
+          />
+          <AppRoute
+            exact
+            path="/post/:post/:id"
             component={Details}
             layout={LayoutDefault}
           />

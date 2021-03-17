@@ -13,15 +13,20 @@ const Details = (props) => {
   const auth = useSelector((state) => state.auth);
   const post = useSelector((state) => state.blog);
   const dispatch = useDispatch();
+  let param = window.location.pathname.split("/");
 
-  useEffect(() => { 
-    console.log(window.location.pathname)
-    let param = window.location.pathname.split('/')
-    console.log(param[2])
-    document.title = props.location.state.title || param[2]
-    dispatch(getPost(props.location.state.id)).then((res) => {
-      setLoading(false);
-    });
+  useEffect(() => {
+    if (param.length >= 4) {
+      document.title = param[2].replace(/-+/g, " ");
+      dispatch(getPost(param[3])).then(() => {
+        setLoading(false);
+      });
+    } else {
+      document.title = props.location.state.title;
+      dispatch(getPost(props.location.state.id)).then(() => {
+        setLoading(false);
+      });
+    }
   }, []);
 
   return (
@@ -31,13 +36,16 @@ const Details = (props) => {
           <Hero
             className="illustration-section-01"
             post={post.blog}
-            title={props.location.state.title}
+            title={param.length >= 4 ? param[2] : props.location.state.title}
             auth={auth.auth.loginSuccess}
           />
-          <Comment split id={props.location.state.id} />
+          <Comment
+            split
+            id={param.length >= 4 ? param[3] : props.location.state.id}
+          />
         </>
       ) : (
-        <Loader/>
+        <Loader />
       )}
     </>
   );
