@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PublishIcon from "@material-ui/icons/Publish";
 import { withRouter } from "react-router-dom";
 import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -142,27 +143,54 @@ const AdminPage = ({
         <div className="cta-slogan">
           <div className="cta-action">
             <form onSubmit={post === undefined ? handleSubmit : editSubmit}>
-              <Input
-                id="title"
-                type="text"
-                change={post === undefined ? handleChange : editChange}
-                value={isEdit.title}
-                placeholder="Article title"
-              />
-              <Input
-                id="headline"
-                type="text"
-                value={isEdit.headline}
-                change={post === undefined ? handleChange : editChange}
-                placeholder="Headline here"
-              />
-              <Input
-                id="publish"
-                type="text"
-                value={isEdit.publish}
-                change={post === undefined ? handleChange : editChange}
-                placeholder="true or false for publish"
-              />
+              {post === undefined ? (
+                <>
+                  {" "}
+                  <Input
+                    id="title"
+                    type="text"
+                    change={handleChange}
+                    placeholder="Article title"
+                  />
+                  <Input
+                    id="headline"
+                    type="text"
+                    change={handleChange}
+                    placeholder="Headline here"
+                  />
+                  <Input
+                    id="publish"
+                    type="text"
+                    change={handleChange}
+                    placeholder="true or false for publish"
+                  />
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Input
+                    id="title"
+                    type="text"
+                    change={editChange}
+                    value={isEdit.title}
+                    placeholder="Article title"
+                  />
+                  <Input
+                    id="headline"
+                    type="text"
+                    value={isEdit.headline}
+                    change={editChange}
+                    placeholder="Headline here"
+                  />
+                  <Input
+                    id="publish"
+                    type="text"
+                    value={isEdit.publish}
+                    change={editChange}
+                    placeholder="true or false for publish"
+                  />
+                </>
+              )}
               <Editor
                 editorState={editorState}
                 wrapperClassName="wrapper-class"
@@ -182,7 +210,9 @@ const AdminPage = ({
           <div className="cta-action">
             Upload File
             <Input type="file" name="file" change={uploadChange} />
-            <Button onClick={uploadFile} />
+            <Button onClick={uploadFile}>
+              <PublishIcon />
+            </Button>
             <div>{url}</div>
           </div>
         </div>

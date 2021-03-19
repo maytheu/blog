@@ -14,6 +14,7 @@ import Details from "./views/Details";
 import Auth from "./views/admin/Auth";
 import SecureRoute from "./utils/SecureRoute";
 import Admin from "./views/admin/Admin";
+import NotFound from "./views/NotFound";
 
 // Initialize Google Analytics
 ReactGA.initialize(process.env.REACT_APP_GA_CODE);
@@ -71,6 +72,7 @@ const App = () => {
             component={Admin}
             layout={LayoutDefault}
           />
+          <AppRoute component={NotFound} layout={LayoutDefault} />
         </Switch>
       )}
     />

@@ -13,7 +13,14 @@ const defaultProps = {
   tag: "h2",
 };
 
-const SectionHeader = ({ className, data, children, tag, ...props }) => {
+const SectionHeader = ({
+  className,
+  data,
+  detail,
+  children,
+  tag,
+  ...props
+}) => {
   const classes = classNames("section-header", className);
   const Component = tag;
 

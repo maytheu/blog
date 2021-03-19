@@ -35,9 +35,9 @@ const slice = createSlice({
     deleteBlog: (state, action) => {
       state.blog = action.payload;
     },
-  },
-  deleteComment: (state, action) => {
-    state.blog = action.payload;
+    deleteComment: (state, action) => {
+      state.blog = action.payload;
+    },
   },
 });
 
@@ -56,9 +56,9 @@ const {
   deleteComment,
 } = slice.actions;
 
-export const getViewPost = () => (dispatch) => {
+export const getViewPostById = (id) => (dispatch) => {
   return axios
-    .get(`${SERVER}view`)
+    .get(`${SERVER}view?page=${id}`)
     .then((res) => dispatch(viewPosts(res.data)));
 };
 
@@ -86,9 +86,9 @@ export const getComment = (id, data) => (dispatch) => {
     .then((res) => dispatch(comment(res.data)));
 };
 
-export const getAllPost = () => (dispatch) => {
+export const getAllPostById = (id) => (dispatch) => {
   return axios
-    .get(`${ADMIN_SERVER}view`)
+    .get(`${ADMIN_SERVER}view?page=${id}`)
     .then((res) => dispatch(allPost(res.data)));
 };
 
@@ -113,5 +113,6 @@ export const getDeleteBlog = (id) => (dispatch) => {
 export const getDeleteComment = (id) => (dispatch) => {
   return axios
     .get(`${ADMIN_SERVER}comment_delete?id=${id}`)
-    .then((res) => dispatch(deleteComment(res.data)));
+    .then((res) => dispatch(deleteComment()));
 };
+

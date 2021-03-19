@@ -50,8 +50,11 @@ module.exports = (app) => {
 
   //display all post for admin
   app.get("/api/user/view", userAuth, (req, res) => {
+    let page = req.query.page || 1;
     Blog.find({})
       .sort({ _id: -1 })
+      .skip((page - 1) * 10)
+      .limit(10)
       .exec((err, post) => {
         if (err) return res.status(400).send(err);
         res.status(200).json({ success: true, post });
@@ -60,8 +63,22 @@ module.exports = (app) => {
 
   //display only all the published post
   app.get("/api/view", (req, res) => {
+    let page = req.query.page || 1;
     Blog.find({ publish: true })
       .sort({ _id: -1 })
+      .skip((page - 1) * 10)
+      .limit(10)
+      .exec((err, post) => {
+        if (err) return res.status(400).send(err);
+        res.status(200).json({ success: true, post });
+      });
+  });
+
+  //display article based on comment
+  app.get("/api/recent", (req, res) => {
+    Blog.find({ publish: true, like: { $gt: 5 } })
+      .sort({ _id: -1 })
+      .limit(5)
       .exec((err, post) => {
         if (err) return res.status(400).send(err);
         res.status(200).json({ success: true, post });
@@ -95,7 +112,7 @@ module.exports = (app) => {
     let id = req.query.id;
     Blog.deleteOne({ _id: id }, (err, post) => {
       if (err) return res.json({ success: false, err });
-      return res.status(200);
+      return res.status(200).json({success: true})
     });
   });
 
