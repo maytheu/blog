@@ -125,7 +125,11 @@ const AdminPage = ({
     e.preventDefault();
     const data = new FormData();
     data.append("file", upload);
-    axios.post("/api/user/upload", data).then((res) => setUrl(res.data.url));
+    axios
+      .post("/api/user/upload", data)
+      .then((res) =>
+        setUrl(`https://maytheublog.herokuapp.com${res.data.url}`)
+      );
   }
 
   const style = { padding: "3px 10px" };
