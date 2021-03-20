@@ -1,5 +1,3 @@
-A blog using react and nodejs
-
 ########
 This web app was created with ReactJs and NodeJS
 
