@@ -3,9 +3,20 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const SHA1 = require("crypto-js/sha1");
+const aws = require("aws-sdk");
 
 const userAuth = require("../middleware/userAuth.js");
 const Blog = mongoose.model("blogs");
+
+aws.config.region = "us-east-1";
+// aws.config.update({ region: "us-east-1" });
+// const s3 = new aws.S3({ apiVersion: "2006-03-01" });
+const s3 = new aws.S3();
+//   {
+//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+// });
+const S3_BUCKET = process.env.S3_BUCKET;
 
 // STORAGE MULTER CONFIG
 let storage = multer.diskStorage({
@@ -13,19 +24,98 @@ let storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../upload/"));
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
+    cb(null, `${Date.now()}${file.originalname}`);
   },
 });
 
 const upload = multer({ storage: storage }).single("file");
 
 module.exports = (app) => {
+  app.get("/", (req, res) => {
+    // Call S3 to list the buckets
+    // Call S3 to obtain a list of the objects in the bucket
+    s3.listObjects({ Bucket: S3_BUCKET }, function (err, data) {
+      if (err) {
+        console.log("Error", err);
+      } else {
+        console.log("Success", data);
+      }
+    });
+  });
+
   app.post("/api/user/upload", userAuth, (req, res) => {
     upload(req, res, (err) => {
       if (err) return res.status(500).send("Please upload a file");
-      return res
-        .status(200)
-        .json({ success: true, url: `/api/upload/${req.file.filename}` });
+
+      // let readable = fs.createReadStream(req.file.path);
+      // readable.on("error", (err) => {
+      //   console.log("File Error", err);
+      // });
+
+      // const uploadParams = {
+      //   Bucket: S3_BUCKET,
+      //   Key: path.basename(req.file.path),
+      //   Body: readable,
+      // };
+
+      const s3Params = {
+        Bucket: S3_BUCKET,
+        Key: req.file.filename,
+        Expires: 60,
+        ContentType: req.file.mimetype,
+        ACL: "public-read",
+      };
+
+      s3.getSignedUrl("putObject", s3Params, (err, data) => {
+        if (err) {
+          return res.end();
+        }
+        const returnData = {
+          signedRequest: data,
+          url: `https://${S3_BUCKET}.s3.amazonaws.com/${req.file.filename}`,
+        };
+        res.write(JSON.stringify(returnData));
+        res.end();
+      });
+
+      // s3.upload(uploadParams, (err, data) => {
+      //   if (err) {
+      //     console.log("Error", err);
+      //   }
+      //   if (data) {
+      //     console.log("Upload Success", data);
+
+      //     //         return res
+      //     // .status(200)
+      //     // .json({ success: true, url: `/api/upload/${req.file.filename}` });
+      //   }
+      // });
+
+      // const s3Params = {
+      //   Bucket: S3_BUCKET,
+      //   Key: req.file.filename,
+      //   Expires: 60,
+      //   ContentType: req.file.mimetype,
+      //   ACL: "public-read",
+      // };
+
+      // s3.getSignedUrl("putObject", s3Params, (err, data) => {
+      //   if (err) {
+      //     console.log(err);
+      //     return res.end();
+      //   }
+      //   console.log(data);
+      //   const returnData = {
+      //     signedRequest: data,
+      //     url: `https://${S3_BUCKET}.s3.amazonaws.com/${req.file.filename}`,
+      //   };
+      //   res.write(JSON.stringify(returnData));
+      //   res.end();
+      // });
+
+      // return res
+      //   .status(200)
+      //   .json({ success: true, url: `/api/upload/${req.file.filename}` });
     });
   });
 
@@ -112,7 +202,7 @@ module.exports = (app) => {
     let id = req.query.id;
     Blog.deleteOne({ _id: id }, (err, post) => {
       if (err) return res.json({ success: false, err });
-      return res.status(200).json({success: true})
+      return res.status(200).json({ success: true });
     });
   });
 

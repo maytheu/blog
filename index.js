@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const cors = require('cors')
 
 require("dotenv").config();
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.DB_URL, {
 
 //check mongoose connection
 console.log(mongoose.connection.readyState);
+
 
 app.use(cookieParser());
 
@@ -35,6 +37,8 @@ app.use(express.static("client"));
 
 require("./route/user.js")(app);
 require("./route/blog.js")(app);
+
+app.use(cors())
 
 // DEFAULT
 if (process.env.NODE_ENV === "production") {

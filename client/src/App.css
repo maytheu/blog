@@ -10,6 +10,11 @@
   border: 1px solid #ccc;
 }
 
+.text p span{
+  color: white !important;
+  font-size: 1.2em !important;
+}
+
 .toolbar-class {
   border: 1px solid #ccc;
 }

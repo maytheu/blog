@@ -125,11 +125,7 @@ const AdminPage = ({
     e.preventDefault();
     const data = new FormData();
     data.append("file", upload);
-    axios
-      .post("/api/user/upload", data)
-      .then((res) =>
-        setUrl(`https://maytheublog.herokuapp.com${res.data.url}`)
-      );
+    axios.post("/api/user/upload", data).then((res) => setUrl(res.data.url));
   }
 
   const style = { padding: "3px 10px" };
@@ -149,7 +145,6 @@ const AdminPage = ({
             <form onSubmit={post === undefined ? handleSubmit : editSubmit}>
               {post === undefined ? (
                 <>
-                  {" "}
                   <Input
                     id="title"
                     type="text"
@@ -171,7 +166,11 @@ const AdminPage = ({
                 </>
               ) : (
                 <>
-                  {" "}
+                  <h4>
+                    <strong>
+                      Please Add <em>Mouse</em> on the Wysiwyg component
+                    </strong>
+                  </h4>
                   <Input
                     id="title"
                     type="text"

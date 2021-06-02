@@ -123,8 +123,9 @@ const Hero = ({
             <div className="container-xs">
               <div className="m-0 mb-32" data-reveal-delay="400">
                 <div
+                  className="text"
                   dangerouslySetInnerHTML={createMarkup(post.post.blog)}
-                ></div>{" "}
+                ></div>
                 {post.post.updateDate
                   ? `Updated on ${new Date(
                       post.post.updateDate

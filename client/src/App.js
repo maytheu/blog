@@ -35,7 +35,7 @@ const App = () => {
     trackPage(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
-
+ 
   return (
     <ScrollReveal
       ref={childRef}
@@ -62,7 +62,7 @@ const App = () => {
           />
           <SecureRoute
             exact
-            path="/admin/"
+            path="/admin"
             component={Admin}
             layout={LayoutDefault}
           />
